@@ -129,3 +129,36 @@ export default function Home() {
     </RootLayout>
   );
 }
+
+// 貼在 page.tsx 的最底下
+function GiftPointsComponent() {
+  const [points, setPoints] = useState('');
+
+  const handleGift = async () => {
+    if (!points) return alert('請輸入點數');
+    const res = await fetch('/api/points', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pointsToSend: Number(points) }),
+    });
+    const data = await res.json();
+    if (data.error) alert(data.error);
+    else alert(data.message);
+  };
+
+  return (
+    <div style={{ padding: '20px', background: '#fff0f6', borderRadius: '12px', margin: '20px 0', border: '2px dashed #f472b6' }}>
+      <h3 style={{ color: '#db2777', fontWeight: 'bold', marginBottom: '10px' }}>💖 主方自由犒賞點數</h3>
+      <input 
+        type="number" 
+        value={points} 
+        onChange={(e) => setPoints(e.target.value)}
+        placeholder="輸入想給的點數" 
+        style={{ color: 'black', padding: '8px', marginRight: '10px', borderRadius: '6px', border: '1px solid #f472b6' }} 
+      />
+      <button onClick={handleGift} style={{ backgroundColor: '#ec4899', color: 'white', padding: '8px 16px', borderRadius: '6px', fontWeight: 'bold' }}>
+        送出點數
+      </button>
+    </div>
+  );
+}
